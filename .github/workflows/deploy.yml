@@ -24,14 +24,17 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "20"
+      # Aquí está el truco: le decimos que entre en la carpeta
       - name: Install Dependencies
+        working-directory: "./2026 PRODUCTIVITY APP"
         run: npm install
       - name: Build
+        working-directory: "./2026 PRODUCTIVITY APP"
         run: npm run build
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./out
+          path: "./2026 PRODUCTIVITY APP/out"
 
   deploy:
     environment:
