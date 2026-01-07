@@ -1,73 +1,97 @@
-"use client";
+import React from 'react';
+import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
+import { Check, Flame } from 'lucide-react-native';
 
-import { Check, AlertTriangle, ShieldAlert } from "lucide-react";
-import { cn } from "@/lib/utils";
-import type { Obligation } from "@/hooks/useAppData";
+type Obligation = {
+    id: string;
+    text: string;
+    type: string;
+    completed: boolean;
+};
 
-interface ObligationsProps {
-    obligations: Obligation[];
-    onToggle: (id: string) => void;
-}
-
-export function Obligations({ obligations, onToggle }: ObligationsProps) {
-    const critical = obligations.filter(o => o.type === 'critical');
-    const habits = obligations.filter(o => o.type === 'habit');
-
+export function Obligations({ data, onToggle }: { data: Obligation[], onToggle: (id: string) => void }) {
     return (
-        <div className="space-y-6">
-            {/* Critical Section */}
-            <div className="space-y-3">
-                <h3 className="flex items-center gap-2 text-red-500 font-bold uppercase tracking-widest text-sm">
-                    <ShieldAlert className="w-4 h-4" /> Non-Negotiable Protocol
-                </h3>
-                <div className="grid gap-3">
-                    {critical.map(task => (
-                        <TaskItem key={task.id} task={task} onToggle={onToggle} />
-                    ))}
-                </div>
-            </div>
-
-            {/* Habits Section */}
-            <div className="space-y-3">
-                <h3 className="text-gold-500/80 font-bold uppercase tracking-widest text-sm">
-                    Standard Operations
-                </h3>
-                <div className="grid gap-3">
-                    {habits.map(task => (
-                        <TaskItem key={task.id} task={task} onToggle={onToggle} />
-                    ))}
-                </div>
-            </div>
-        </div>
+        <View style={styles.container}>
+            {data.map((item) => (
+                <TouchableOpacity
+                    key={item.id}
+                    onPress={() => onToggle(item.id)}
+                    activeOpacity={0.7}
+                    style={[styles.card, item.completed && styles.cardCompleted]}
+                >
+                    <View style={styles.row}>
+                        <View style={[styles.checkbox, item.completed && styles.checkboxChecked]}>
+                            {item.completed && <Check size={14} color="#000" strokeWidth={4} />}
+                        </View>
+                        <View>
+                            <Text style={[styles.text, item.completed && styles.textCompleted]}>
+                                {item.text}
+                            </Text>
+                            <Text style={styles.type}>
+                                {item.type === 'critical' ? 'CRITICAL PROTOCOL' : 'DAILY HABIT'}
+                            </Text>
+                        </View>
+                    </View>
+                    {item.type === 'critical' && !item.completed && (
+                        <Flame size={16} color="#ef4444" />
+                    )}
+                </TouchableOpacity>
+            ))}
+        </View>
     );
 }
 
-function TaskItem({ task, onToggle }: { task: Obligation; onToggle: (id: string) => void }) {
-    return (
-        <div
-            onClick={() => onToggle(task.id)}
-            className={cn(
-                "group flex items-center justify-between p-4 rounded-xl border border-white/5 cursor-pointer backdrop-blur-md transition-all duration-300",
-                task.completed
-                    ? "bg-gold-500/10 border-gold-500/30"
-                    : "bg-onyx-900/50 hover:bg-onyx-800"
-            )}
-        >
-            <span className={cn(
-                "font-medium transition-colors",
-                task.completed ? "text-gold-400" : "text-gray-300"
-            )}>
-                {task.text}
-            </span>
-
-            <div className={cn(
-                "w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all",
-                task.completed
-                    ? "bg-gold-500 border-gold-500 shadow-[0_0_10px_rgba(212,175,55,0.4)]"
-                    : "border-white/20 group-hover:border-white/40"
-            )}>
-                {task.completed && <Check className="w-4 h-4 text-black" strokeWidth={3} />}
-            </div>
-        </div>
-    );
-}
+const styles = StyleSheet.create({
+    container: {
+        gap: 12,
+    },
+    card: {
+        backgroundColor: '#18181b', // Zinc 900
+        padding: 16,
+        borderRadius: 16,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        borderWidth: 1,
+        borderColor: '#27272a',
+    },
+    cardCompleted: {
+        backgroundColor: '#000',
+        borderColor: '#27272a',
+        opacity: 0.6,
+    },
+    row: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 16,
+    },
+    checkbox: {
+        width: 24,
+        height: 24,
+        borderRadius: 8,
+        borderWidth: 2,
+        borderColor: '#52525b',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    checkboxChecked: {
+        backgroundColor: '#D4AF37', // Gold
+        borderColor: '#D4AF37',
+    },
+    text: {
+        color: '#fff',
+        fontSize: 16,
+        fontWeight: '600',
+    },
+    textCompleted: {
+        color: '#71717a',
+        textDecorationLine: 'line-through',
+    },
+    type: {
+        color: '#52525b',
+        fontSize: 10,
+        fontWeight: '700',
+        letterSpacing: 0.5,
+        marginTop: 2,
+    },
+});
