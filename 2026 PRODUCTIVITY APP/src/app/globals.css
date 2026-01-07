@@ -1,0 +1,44 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 236, 236, 241;
+  --background-start-rgb: 9, 9, 11;
+  --background-end-rgb: 0, 0, 0;
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(
+      to bottom,
+      rgb(var(--background-start-rgb)),
+      rgb(var(--background-end-rgb))
+    );
+  min-height: 100vh;
+  font-family: 'Inter', sans-serif; /* Setup font separately step if needed */
+}
+
+/* Scrollbar refinement */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #09090b;
+}
+::-webkit-scrollbar-thumb {
+  background: #333;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #D4AF37;
+}
+
+@layer utilities {
+  .glass-panel {
+    @apply bg-white/5 backdrop-blur-lg border border-white/10 shadow-xl;
+  }
+  .gold-glow {
+    box-shadow: 0 0 15px rgba(212, 175, 55, 0.15);
+  }
+}
