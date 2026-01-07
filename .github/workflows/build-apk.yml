@@ -25,7 +25,9 @@ jobs:
           java-version: '17'
 
       - name: 📦 Install Dependencies
-        working-directory: "./2026 PRODUCTIVITY APP"
+        # Si subiste la carpeta, mantenemos esto. Si subiste archivos sueltos, bórralo.
+        # ASUMIMOS QUE SUBISTE LA CARPETA (es lo más seguro por ahora)
+        working-directory: "./2026 PRODUCTIVITY APP" 
         run: npm install
 
       - name: ⚙️ Prebuild (Generate Android Folder)
